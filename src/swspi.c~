@@ -1,5 +1,4 @@
 #include "swspi.h"
-#include "nRF24L01.h"
 #include <util/delay_basic.h>
 
 #define setbit(P, B) ((P) |= (_BV(B)))
@@ -11,7 +10,7 @@
 #else
 #  define SPIDELAYTIME 1
 #endif
-#define SPIHALFDELAY() _delay_loop_1(SPIDELAYTIME) // half of tact (bit transfer) - min 1 CPU tact
+#define SPIHALFDELAY() _delay_loop_1(SPIDELAYTIME)
 
 #define SETMOSI() setbit(MOSI_PORT, MOSI_PIN)
 #define CLIMOSI() clibit(MOSI_PORT, MOSI_PIN)

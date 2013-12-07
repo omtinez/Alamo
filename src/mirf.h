@@ -11,31 +11,35 @@
 #define mirf_TX_ADDR { 0xF1, 0xF1, 0xF1, 0xF1, 0xF1 }
 #define mirf_RX_ADDR { 0xF1, 0xF1, 0xF1, 0xF1, 0xF1 }
 
-// Definitions for selecting and enabling MiRF module
+// CSN high
 #define CHIP_SELECT_HI() do { \
     _delay_us(10); \
     PORTC |= _BV(CSN_PIN); \
     _delay_us(10); \
 } while(0);
 
+// CSN low
 #define CHIP_SELECT_LO() do { \
     _delay_us(10); \
     PORTC &= ~_BV(CSN_PIN); \
     _delay_us(10); \
 } while(0);
 
+// CE high
 #define CHIP_ENABLE_ON() do { \
     _delay_us(10); \
     CE_PORT |= _BV(CE_PIN); \
     _delay_us(10); \
 } while(0)
 
+// CE low
 #define CHIP_ENABLE_OFF() do { \
     _delay_us(10); \
     CE_PORT &= ~_BV(CE_PIN); \
     _delay_us(10); \
 } while(0)
 
+// Reboot RF module and enter TX mode
 #define TRANSMIT_MODE_ON() do { \
         config &= ~_BV(PRIM_RX); \
         mirf_st(CONFIG, config); \
@@ -44,6 +48,7 @@
         _delay_ms(100); \
 } while (0)
 
+// Exit TX mode and reboot RF module
 #define TRANSMIT_MODE_OFF() do { \
         config |= _BV(PRIM_RX); \
         mirf_st(CONFIG, config & ~_BV(PWR_UP)); \

@@ -10,7 +10,7 @@
 #else
 #  define SPIDELAYTIME 1
 #endif
-#define SPIHALFDELAY() _delay_loop_1(SPIDELAYTIME) // half of tact (bit transfer) - min 1 CPU tact
+#define SPIHALFDELAY() _delay_loop_1(SPIDELAYTIME)
 
 #define SETMOSI() setbit(MOSI_PORT, MOSI_PIN)
 #define CLIMOSI() clibit(MOSI_PORT, MOSI_PIN)
@@ -60,9 +60,6 @@ uint8_t spi_transfer(uint8_t data) {
     return (res);
 }
 
-/* resp - responce from slave device; resplen - max. expected resp. len (buf. size);
- * if resp is NULL, not saved. Returns always the last byte of the response.
- */
 uint8_t spi_ntransfer(const uint8_t *req, uint8_t *resp, int len) {
     int nbit;
     int nbyte;

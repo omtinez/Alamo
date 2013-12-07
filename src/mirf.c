@@ -13,15 +13,12 @@ volatile uint8_t config;
 
 // Initialize all the default settings of the RF module and I/O pins of AVR
 void mirf_init() {
-    // Define CSN and CE as Output and set them to default
-    //DDRC |= _BV(CSN_PIN)|_BV(CE_PIN);
+
+    // Set CSN and CE to default
     CHIP_ENABLE_LO();
     CHIP_SELECT_HI();
 
-    // IRQ as Input
-    //DDRC &= ~_BV(IRQ_PIN);
-    //IRQ_PORT &= ~_BV(IRQ_PIN);
-
+    // Set IRQ as interrupt
     //PCICR |= _BV(PCIE0);  
     //PCMSK1 |= _BV(PCINT0);
     
@@ -75,8 +72,6 @@ void mirf_init() {
     config |= _BV(PRIM_RX);
     
     // Start up the module
-    //TRANSMIT_MODE_ON();
-    //TRANSMIT_MODE_OFF();
     mirf_st(CONFIG, config | _BV(PWR_UP));
 }
 
@@ -155,10 +150,8 @@ uint8_t mirf_retry_max() {
     return status & _BV(MAX_RT);
 }
 
-uint8_t mirf_write(uint8_t* value, uint8_t len) 
-// Sends a data package to the default address. Be sure to send the correct
-// amount of bytes as configured as payload on the receiver.
-{
+// Send data from a buffer to the pre-configured receiver address
+uint8_t mirf_write(uint8_t* value, uint8_t len) {
     // Flush data from TX queue
     CHIP_SELECT_LO();
     spi_transfer(FLUSH_TX);

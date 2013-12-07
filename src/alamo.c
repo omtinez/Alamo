@@ -54,8 +54,9 @@ void printSettings() {
     serial_write_str(OUTPUT_BUFFER);
 }
 
-int main(void) {
+void init(void) {
 
+    // Safe sleep and signal init
     _delay_ms(3000);
     blink1();
     _delay_ms(100);
@@ -63,7 +64,7 @@ int main(void) {
     _delay_ms(100);
     blink1();
 
-    // set up I/O
+    // Set up I/O
     MISO_DDR &= ~_BV(MISO_PIN);
     IRQ_DDR &= ~_BV(IRQ_PIN);
     MOSI_DDR |= _BV(MOSI_PIN);
@@ -86,6 +87,12 @@ int main(void) {
     _delay_ms(50);
     
     printSettings();
+}
+
+int main(void) {
+
+    // Initialization
+    init();
     
     if (!MASTER) CHIP_ENABLE_HI();
 

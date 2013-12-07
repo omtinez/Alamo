@@ -36,16 +36,6 @@
     _delay_us(10); \
 } while(0)
 
-//#define TRANSMIT_MODE_ON() do { \
-        CHIP_ENABLE_OFF(); \
-        _delay_us(100); \
-        mirf_st(CONFIG, config & ~_BV(PRIM_RX)); \
-        CHIP_ENABLE_ON(); \
-        CHIP_ENABLE_OFF(); \
-        _delay_us(130); \
-} while (0) // 120
-
-
 #define TRANSMIT_MODE_ON() do { \
         config &= ~_BV(PRIM_RX); \
         mirf_st(CONFIG, config); \
@@ -62,14 +52,10 @@
         _delay_ms(100); \
 } while (0)
 
-//#define TRANSMIT_MODE_OFF() do { \
-        mirf_st(CONFIG, config | _BV(PRIM_RX)); \
-} while (0)
-
 // Definitions used for result codes
-#define RESULT_SUCCESS 0
-#define RESULT_FAILED 1
-#define RESULT_TIMEOUT 2
+#define RESULT_SUCCESS  0
+#define RESULT_FAILED   1
+#define RESULT_TIMEOUT  2
 
 // Public standart functions
 void mirf_init();
