@@ -163,7 +163,7 @@ int main(void) {
         _delay_ms(1000);
         
         //uint8_t res = mirf_ready();
-        uint8_t res = !(IRQ_PORT & _BV(IRQ_PIN));
+        uint8_t res = IRQ_PORT & ~_BV(IRQ_PIN);
         if (res) {
         
             serial_write_str("THERE IS DATA!\n");

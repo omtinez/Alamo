@@ -8,9 +8,9 @@
 #define SCLK_DDR DDRC
 #define SCLK_PORT PORTC
 #define SCLK_PIN PC2
-#define IRQ_DDR DDRD
-#define IRQ_PORT PIND
-#define IRQ_PIN PD2
+#define IRQ_DDR DDRC
+#define IRQ_PORT PINC
+#define IRQ_PIN PC3
 #define CE_DDR DDRC
 #define CE_PORT PINC
 #define CE_PIN  PC4
