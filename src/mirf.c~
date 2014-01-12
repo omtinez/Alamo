@@ -61,9 +61,6 @@ void mirf_init() {
     // Double byte CRC encoding scheme
     config |= _BV(CRCO);
     
-    // Disable IRQ interrupts for now
-    //config |= _BV(MASK_RX_DR)|_BV(MASK_TX_DS);
-    
     // Receiver mode by default
     config |= _BV(PRIM_RX);
     

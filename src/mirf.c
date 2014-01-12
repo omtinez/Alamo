@@ -80,30 +80,38 @@ uint8_t mirf_ld(uint8_t reg) {
 }
 
 // Stores the given value to a specified register
-void mirf_st(uint8_t reg, uint8_t value) {
+uint8_t mirf_st(uint8_t reg, uint8_t value) {
+    uint8_t status;
     CHIP_SELECT_LO();
-    spi_transfer(W_REGISTER | (REGISTER_MASK & reg));
+    status = spi_transfer(W_REGISTER | (REGISTER_MASK & reg));
     _delay_us(10);
     spi_transfer(value);
     CHIP_SELECT_HI();
+    return status;
 }
 
 // Loads multiple values from the given start position in the specified register
-void mirf_ldm(uint8_t reg, uint8_t * value, uint8_t len) {
+uint8_t mirf_ldm(uint8_t reg, uint8_t * value, uint8_t len) {
+    uint8_t status;
     CHIP_SELECT_LO();
-    spi_transfer(R_REGISTER | (REGISTER_MASK & reg));
+    status = spi_transfer(R_REGISTER | (REGISTER_MASK & reg));
     _delay_us(10);
     spi_ntransfer(value, value, len);
     CHIP_SELECT_HI();
+    return status;
 }
 
 // Stores multiple values at the given start position of the specified register
-void mirf_stm(uint8_t reg, uint8_t * value, uint8_t len) {
+uint8_t mirf_stm(uint8_t reg, uint8_t* values, uint8_t len) {
+    uint8_t status;
+    uint8_t* data[len];
+    memcpy(data, values, len);
     CHIP_SELECT_LO();
-    spi_transfer(W_REGISTER | (REGISTER_MASK & reg));
+    status = spi_transfer(W_REGISTER | (REGISTER_MASK & reg));
     _delay_us(10);
-    spi_ntransfer(value, value, len);
+    spi_ntransfer(data, data, len);
     CHIP_SELECT_HI();
+    return status;
 }
 
 // Returns true if there is data waiting at incoming queue

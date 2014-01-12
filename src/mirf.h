@@ -58,16 +58,17 @@
 #define RESULT_FAILED   1
 #define RESULT_TIMEOUT  2
 
-// Public standart functions
+// Init and I/O functions
 void mirf_init();
-uint8_t mirf_write(uint8_t * value, uint8_t len);
 uint8_t mirf_ready();
-void mirf_read(uint8_t * data, uint8_t len);
+void mirf_listen(uint8_t* addr);
+uint8_t mirf_write(uint8_t* addr, uint8_t* data, uint8_t len);
+void mirf_read(uint8_t* data, uint8_t len);
 
-// Public extended functions
+// Register related functions
 uint8_t mirf_ld(uint8_t reg);
-void mirf_st(uint8_t reg, uint8_t value);
-void mirf_ldm(uint8_t reg, uint8_t* value, uint8_t len);
-void mirf_stm(uint8_t reg, uint8_t* value, uint8_t len);
+uint8_t mirf_st(uint8_t reg, uint8_t value);
+uint8_t mirf_ldm(uint8_t reg, uint8_t* value, uint8_t len);
+uint8_t mirf_stm(uint8_t reg, uint8_t* value, uint8_t len);
 
 #endif /* _MIRF_H_ */
