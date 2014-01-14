@@ -17,10 +17,6 @@ void mirf_init() {
     // Set CSN and CE to default
     CHIP_ENABLE_LO();
     CHIP_SELECT_HI();
-
-    // Set IRQ as interrupt
-    //PCICR |= _BV(PCIE0);  
-    //PCMSK1 |= _BV(PCINT0);
     
     // Enable auto-acknowledgement
     mirf_st(EN_AA, 0x01);
@@ -35,14 +31,14 @@ void mirf_init() {
     mirf_st(SETUP_AW, 0x03); // 0b0000 0011 -> 5 bytes RF address
     
     // RF channel setup
-    mirf_st(RF_CH, 0x03); // 0b0000 0001 -> 2,400-2,527GHz
+    mirf_st(RF_CH, 0x01); // 0b0000 0001 -> 2,400-2,527GHz
     
     // Power mode and data speed
-    mirf_st(RF_SETUP, 0x06); // 0b0010 0110 -> 250kbps 0dBm (last bit means nothing)
+    mirf_st(RF_SETUP, 0x26); // 0b0010 0110 -> 250kbps 0dBm (last bit means nothing)
     
     // Set receiver address (same as TX_ADDR since EN_AA is set)
-    uint8_t rx_addr[5] = mirf_RX_ADDR;
-    mirf_stm(RX_ADDR_P0, rx_addr, 5); // on P0 to match EN_RXADDR setting
+    //uint8_t rx_addr[5] = mirf_RX_ADDR;
+    //mirf_stm(RX_ADDR_P0, rx_addr, 5); // on P0 to match EN_RXADDR setting
     
     // Set length of payload 
     mirf_st(RX_PW_P0, 8);
@@ -102,16 +98,28 @@ uint8_t mirf_ldm(uint8_t reg, uint8_t * value, uint8_t len) {
 }
 
 // Stores multiple values at the given start position of the specified register
-uint8_t mirf_stm(uint8_t reg, uint8_t* values, uint8_t len) {
+uint8_t mirf_stm(uint8_t reg, const uint8_t* values, uint8_t len) {
     uint8_t status;
-    uint8_t* data[len];
-    memcpy(data, values, len);
+    uint8_t data[len];
+    memcpy(data, values, len * sizeof(uint8_t));
     CHIP_SELECT_LO();
     status = spi_transfer(W_REGISTER | (REGISTER_MASK & reg));
     _delay_us(10);
     spi_ntransfer(data, data, len);
     CHIP_SELECT_HI();
     return status;
+}
+
+void mirf_listen(uint8_t* addr) {
+
+    // Set receiver address
+    mirf_stm(RX_ADDR_P0, addr, 5); // on P0 to match EN_RXADDR setting
+    
+    // Enter RX mode
+    CHIP_ENABLE_HI();
+    
+    // Enable interrupts
+    sei();
 }
 
 // Returns true if there is data waiting at incoming queue
@@ -152,7 +160,7 @@ uint8_t mirf_retry_max() {
 }
 
 // Send data from a buffer to the pre-configured receiver address
-uint8_t mirf_write(uint8_t* value, uint8_t len) {
+uint8_t mirf_write(uint8_t* addr, const uint8_t* data, uint8_t len) {
 
     // Flush data from TX queue
     CHIP_SELECT_LO();
@@ -171,18 +179,16 @@ uint8_t mirf_write(uint8_t* value, uint8_t len) {
     mirf_st(EN_AA, 0x01);
     
     // Set transmitter address (where we are transmitting to)
-    uint8_t tx_addr[5] = mirf_TX_ADDR;
-    mirf_stm(TX_ADDR, tx_addr, 5);
+    mirf_stm(TX_ADDR, addr, 5);
 
     // Set receiver address (same as TX_ADDR since EN_AA is set)
-    uint8_t rx_addr[5] = mirf_RX_ADDR;
-    mirf_stm(RX_ADDR_P0, rx_addr, 5);
+    mirf_stm(RX_ADDR_P0, addr, 5);
     
     // Send payload to RF module
     CHIP_SELECT_LO();
     spi_transfer(W_TX_PAYLOAD);
     _delay_us(10);
-    spi_ntransfer(value, value, len);
+    spi_ntransfer(data, data, len);
     CHIP_SELECT_HI();
 
     // Begin transmission

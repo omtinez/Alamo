@@ -1,7 +1,7 @@
 #include "swspi.h"
 #include <avr/delay.h>
 
-#define SCLK_CYCLE() _delay_us(0.002)
+#define SCLK_CYCLE() _delay_us(0.001)
 #define SCLK_HI() SCLK_PORT |= _BV(SCLK_PIN)
 #define SCLK_LO() SCLK_PORT &= ~_BV(SCLK_PIN)
 #define MOSI_HI() MOSI_PORT |= _BV(MOSI_PIN)
