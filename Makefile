@@ -31,7 +31,7 @@ PORT = /dev/ttyUSB0
 CFLAGS = -mmcu=$(MCU) -DF_CPU=$(F_CPU)UL -g -Os -Wall -Wunused
 ASFLAGS = -mmcu=$(MCU) -x assembler-with-cpp -Wa,-gstabs
 LDFLAGS = -mmcu=$(MCU) -Wl,-Map=$(OUTDIR)/$(TARGET).map
-AVRDUDE_FLAGS = -p $(MCU) -c $(PROGRAMMER) -P $(PORT) -b 19200 -vvvv
+AVRDUDE_FLAGS = -p $(MCU) -c $(PROGRAMMER) -P $(PORT) -b 19200
 #######################################
 # end of user configuration
 #######################################

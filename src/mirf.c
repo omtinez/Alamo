@@ -14,6 +14,9 @@ volatile uint8_t config;
 // Initialize all the default settings of the RF module and I/O pins of AVR
 void mirf_init() {
 
+    // Shut down during config
+    mirf_st(CONFIG, 0);
+    
     // Set CSN and CE to default
     CHIP_ENABLE_LO();
     CHIP_SELECT_HI();
@@ -59,7 +62,7 @@ void mirf_init() {
     
     // Receiver mode by default
     config |= _BV(PRIM_RX);
-    
+
     // Start up the module
     mirf_st(CONFIG, config | _BV(PWR_UP));
 }
@@ -98,7 +101,7 @@ uint8_t mirf_ldm(uint8_t reg, uint8_t * value, uint8_t len) {
 }
 
 // Stores multiple values at the given start position of the specified register
-uint8_t mirf_stm(uint8_t reg, const uint8_t* values, uint8_t len) {
+uint8_t mirf_stm(uint8_t reg, uint8_t* values, uint8_t len) {
     uint8_t status;
     uint8_t data[len];
     memcpy(data, values, len * sizeof(uint8_t));
@@ -160,7 +163,7 @@ uint8_t mirf_retry_max() {
 }
 
 // Send data from a buffer to the pre-configured receiver address
-uint8_t mirf_write(uint8_t* addr, const uint8_t* data, uint8_t len) {
+uint8_t mirf_write(uint8_t* addr, uint8_t* data, uint8_t len) {
 
     // Flush data from TX queue
     CHIP_SELECT_LO();
@@ -199,7 +202,7 @@ uint8_t mirf_write(uint8_t* addr, const uint8_t* data, uint8_t len) {
     
     // Wait for transmission to finish
     int timeout = 500;
-    uint8_t status, ret;
+    uint8_t status, ret = RESULT_TIMEOUT;
     while (timeout > 0) {
         status = mirf_ld(STATUS);
         if (status & _BV(MAX_RT)) {
@@ -210,9 +213,6 @@ uint8_t mirf_write(uint8_t* addr, const uint8_t* data, uint8_t len) {
             mirf_st(STATUS, _BV(TX_DS));
             ret = RESULT_SUCCESS;
             break;
-        } else if (timeout < 0) {
-            ret = RESULT_TIMEOUT;
-            break;
         }
         
         timeout -= 10;
@@ -221,6 +221,6 @@ uint8_t mirf_write(uint8_t* addr, const uint8_t* data, uint8_t len) {
 
     // Finish transmission
     CHIP_ENABLE_LO();
-    TRANSMIT_MODE_OFF();
+    //TRANSMIT_MODE_OFF();
     return ret;
 }

@@ -1,6 +1,7 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 #include <stdio.h>
+#include <string.h>
 #include "nRF24L01.h"
 #include "swspi.h"
 #include "usart.h"
@@ -11,7 +12,9 @@
 
 char OUTPUT_BUFFER[64];
 uint8_t buffersize = 8;
-uint8_t buffer[buffersize];
+uint8_t buffer[8];
+
+uint8_t testdata[8] = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 };
 
 ISR (INT0_vect) {
     serial_write_str("THERE IS DATA!\n");
@@ -156,18 +159,10 @@ int main(void) {
         }
     }
     
-    // Initialize buffers
-    uint8_t buffersize = 8;
-    //const uint8_t buffer[8] = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 };
-    
-    // Fill buffer with sequential data for testing
-    //int i;
-    //for (i = 0; i < buffersize; i++) {
-    //    buffer[i] = (uint8_t) (i + 1);
-    //}
-    
     while(MASTER) {
         
+        memcpy(buffer, testdata, 8 * sizeof(uint8_t));
+
         serial_write_str("SENDING DATA...\n");
         sprintf(OUTPUT_BUFFER, "DATA: %02x %02x %02x %02x %02x %02x %02x %02x\n", 
             buffer[0], buffer[1], buffer[2], buffer[3], buffer[4], buffer[5], buffer[6], buffer[7]);

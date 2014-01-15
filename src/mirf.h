@@ -38,8 +38,6 @@
 // Reboot RF module and enter TX mode
 #define TRANSMIT_MODE_ON() do { \
         config &= ~_BV(PRIM_RX); \
-        mirf_st(CONFIG, config); \
-        _delay_us(10); \
         mirf_st(CONFIG, config | _BV(PWR_UP)); \
         _delay_ms(100); \
 } while (0)
@@ -62,13 +60,13 @@
 void mirf_init();
 uint8_t mirf_ready();
 void mirf_listen(uint8_t* addr);
-uint8_t mirf_write(uint8_t* addr, const uint8_t* data, uint8_t len);
+uint8_t mirf_write(uint8_t* addr, uint8_t* data, uint8_t len);
 void mirf_read(uint8_t* data, uint8_t len);
 
 // Register related functions
 uint8_t mirf_ld(uint8_t reg);
 uint8_t mirf_st(uint8_t reg, uint8_t value);
 uint8_t mirf_ldm(uint8_t reg, uint8_t* data, uint8_t len);
-uint8_t mirf_stm(uint8_t reg, const uint8_t* data, uint8_t len);
+uint8_t mirf_stm(uint8_t reg, uint8_t* data, uint8_t len);
 
 #endif /* _MIRF_H_ */
