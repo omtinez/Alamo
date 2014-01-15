@@ -1,43 +1,36 @@
-AVR Template
-============
+NRF24L01+ DRIVER
+================
 
-## Toolchain
+## About
 
-### Ubuntu
+Driver written for the NRF24L01+ transreceiver running on AVR hardware. It
+implements all of the necessary low level functions to interface with the
+hardware, in addition to simple methods that allow developers to write
+applications that make use of wireless communication within minutes.
 
-The AVR toolchain, C libraries, and the avrdude downloader/uploader, can be
-installed from the Ubuntu repositories:
+## License
 
-    apt-get install gcc-avr avr-libc avrdude
+Copyright (c) 2014, Oscar Martinez
+All rights reserved.
 
-## Building
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
-1. Clone the [avr-template](https://github.com/uctools/avr-templates) repository
-   (or fork it and clone your own repository).
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
 
-        git clone git@github.com:uctools/avr-template
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
 
-2. Modify the Makefile:
-    * Set TARGET to the desired name of the output file (eg: TARGET = main)
-    * Set SOURCES to a list of your sources (eg: SOURCES = main.c two.c three.c)
-    * Set MCU to the AVR part number to build for (eg: MCU = atmega328p)
-
-    By default, the Makefile will build code for the ATmega328p, which is the
-    microcontroller on the Arduino
-
-3. Run `make`
-
-4. The output files will be created in the 'build' folder
-
-## Flashing
-
-1. Modify the Makefile
-  * Set PROGRAMMER to your programmer. This will be the `-c` option for avrdude
-  * Set PORT to the port your programmer is on. This will be the `-P` option for 
-    avrdude
-
-    By default, the Makefile will flash an Arduino conenected over USB on
-    `/dev/usbACM0` using the Arduino bootloader.
-
-2. Run `make flash`. You may need to run this command as root (`sudo make
-   flash`) if your user cannot access the port.
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+   IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+   THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+   PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+   EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+   PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+   PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+   LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
