@@ -15,7 +15,7 @@ application that uses the driver can be found in src/driver/examples/hello.c
 
 To compile, put all the driver source files and the application source files
 under the same directory and compile using the avr-gcc toolchain. Two Makefiles
-are provided under the directory Makefiles as a reference, they use the gcc-avr
+are provided under the directory makefiles/ as a reference, they use the gcc-avr
 and avrdude toolchain.
 
 ## License
