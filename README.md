@@ -8,6 +8,16 @@ implements all of the necessary low level functions to interface with the
 hardware, in addition to simple methods that allow developers to write
 applications that make use of wireless communication within minutes.
 
+## Build instructions
+
+All the driver source files are located under src/driver/. An example
+application that uses the driver can be found in src/driver/examples/hello.c
+
+To compile, put all the driver source files and the application source files
+under the same directory and compile using the avr-gcc toolchain. Two Makefiles
+are provided under the directory Makefiles as a reference, they use the gcc-avr
+and avrdude toolchain.
+
 ## License
 
 Copyright (c) 2014, Oscar Martinez
