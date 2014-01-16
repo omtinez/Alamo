@@ -15,7 +15,7 @@ MCU = atmega168
 F_CPU = 16000000
 # SOURCES: list of input source sources
 SOURCES = hello.c \
-    txrx.c \
+    rxtx.c \
     swspi.c \
     usart.c
 # OUTDIR: directory to use for output
