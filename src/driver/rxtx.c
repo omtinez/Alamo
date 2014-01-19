@@ -1,12 +1,11 @@
 #include "rxtx.h"
 #include "nRF24L01.h"
 #include "swspi.h"
+#include <string.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-// tmp
-#include "usart.h"
-
+#define CONFIG_REG (0 | _BV(EN_CRC) | _BV(CRCO))
 
 // maintain a copy of the config register
 volatile uint8_t config;
@@ -61,6 +60,7 @@ void rxtx_init() {
 
     // Start up the module
     rxtx_st(CONFIG, config | _BV(PWR_UP));
+    //rxtx_st(CONFIG, CONFIG_REG | _BV(PWR_UP));
 }
 
 // Load value from the specified register
@@ -117,16 +117,26 @@ void rxtx_listen(uint8_t* addr) {
     // Power up the radio as a receiver
     config |= _BV(PRIM_RX);
     rxtx_st(CONFIG, config | _BV(PWR_UP));
+    //rxtx_st(CONFIG, CONFIG_REG | _BV(PRIM_RX) | _BV(PWR_UP));
     
     // Enter RX mode
     CHIP_ENABLE_HI();
     
-    // Enable interrupts
+    // Enable interrupts if settings allow
+    #ifdef USE_INTERRUPTS
     sei();
+    #endif
 }
 
 // Returns true if there is data waiting at incoming queue
 uint8_t rxtx_ready() {
+
+    // Read queue status from pin if settings allow
+    #ifdef USE_IRQ
+    return IRQ_PORT & _BV(IRQ_PIN);
+    #endif
+
+    // Otherwise query status register
     uint8_t status;
     CHIP_SELECT_LO();
     status = spi_transfer(NOP);
@@ -188,6 +198,7 @@ uint8_t rxtx_write(uint8_t* addr, uint8_t* data, uint8_t len) {
     // Power up the radio as a transmitter
     config &= ~_BV(PRIM_RX);
     rxtx_st(CONFIG, config | _BV(PWR_UP));
+    //rxtx_st(CONFIG, (CONFIG_REG | _BV(PWR_UP)) & ~_BV(PRIM_RX));
     _delay_ms(100);
         
     // Set ready flag

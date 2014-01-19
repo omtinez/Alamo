@@ -1,5 +1,5 @@
 #include "swspi.h"
-#include <avr/delay.h>
+#include <util/delay.h>
 
 #define SCLK_CYCLE() _delay_us(0.001)
 #define SCLK_HI() SCLK_PORT |= _BV(SCLK_PIN)

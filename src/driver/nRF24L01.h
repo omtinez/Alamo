@@ -4,6 +4,7 @@
 #define MOSI_PIN PC0
 #define MISO_DDR DDRC
 #define MISO_PORT PINC
+//#define MISO_PORT PORTC
 #define MISO_PIN PC1
 #define SCLK_DDR DDRC
 #define SCLK_PORT PORTC

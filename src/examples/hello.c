@@ -16,12 +16,14 @@ uint8_t buffer[8];
 uint8_t testdata[8] = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 };
 
 ISR (INT0_vect) {
+    #ifdef USE_INTERRUPTS
     serial_write_str("THERE IS DATA!\n");
     memset(buffer, 0, sizeof(uint8_t) * buffersize);
     rxtx_read(buffer, buffersize);
     sprintf(OUTPUT_BUFFER, "DATA: %02x %02x %02x %02x %02x %02x %02x %02x\n", 
             buffer[0], buffer[1], buffer[2], buffer[3], buffer[4], buffer[5], buffer[6], buffer[7]);
     serial_write_str (OUTPUT_BUFFER);
+    #endif
 }
 
 void blink1(void) {
@@ -125,8 +127,10 @@ void init(void) {
     CSN_DDR |= _BV(CSN_PIN);
     
     // Set up interrupts
+    #ifdef USE_INTERRUPTS
     EICRA |= _BV(ISC10);
     EIMSK |= _BV(INT0);
+    #endif
     
     // initialize USART
     USART_Init((F_CPU / (USART_BAUDRATE * 16UL)) - 1);
@@ -150,10 +154,21 @@ int main(void) {
 
         while(!MASTER) {
         
-            serial_write_str("RECEIVING DATA...\n");
             blink2();
+            serial_write_str("RECEIVING DATA...\n");
             
             _delay_ms(1000);
+
+            #ifndef USE_INTERRUPTS
+            if (rxtx_ready()) {
+                serial_write_str("THERE IS DATA!\n");
+                memset(buffer, 0, sizeof(uint8_t) * buffersize);
+                rxtx_read(buffer, buffersize);
+                sprintf(OUTPUT_BUFFER, "DATA: %02x %02x %02x %02x %02x %02x %02x %02x\n", 
+                        buffer[0], buffer[1], buffer[2], buffer[3], buffer[4], buffer[5], buffer[6], buffer[7]);
+                serial_write_str (OUTPUT_BUFFER);
+            }
+            #endif
         }
     }
     
